@@ -1,0 +1,20 @@
+# Tempo total em minutos
+TFS=5
+
+# Vazão por minuto (m3/min)
+VAM=0.75
+
+# Porcentagem de ar (0..100)
+PCT_AR=10
+
+# Sentido do fluxo
+SENTIDO=Direto
+
+# Gera saída a cada X m3
+TAXA_IMG=1m3
+
+# Caminho do arquivo
+CAMINHO=saida.txt
+
+# Formato do display (nesta versão fica "texto")
+FORMATO=texto
