@@ -1,4 +1,4 @@
-# Simulador-de-Hidrometro-Analogico
+# Simulador de Hidrômetro Analógico
 Projeto acadêmico desenvolvido em C++ com Programação Orientada a Objetos para simular o funcionamento de um hidrômetro analógico.  
 Esta é a **primeira versão**: a saída é exibida no terminal e salva em um arquivo texto (`saida.txt`).  
 Na próxima versão, será implementada a geração de imagem (`.jpeg`) do mostrador do hidrômetro.
