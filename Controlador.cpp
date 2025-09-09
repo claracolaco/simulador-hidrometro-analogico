@@ -5,13 +5,11 @@
 #include <algorithm>
 #include <cctype>
 
-// ===== utilitário local =====
 static std::string to_lower(std::string s) {
     for (auto &ch : s) ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
     return s;
 }
 
-// ===== trim (frente e trás) =====
 std::string Controlador::trim(const std::string& s) {
     size_t b = 0, e = s.size();
     while (b < e && std::isspace(static_cast<unsigned char>(s[b]))) ++b;
@@ -19,7 +17,6 @@ std::string Controlador::trim(const std::string& s) {
     return s.substr(b, e - b);
 }
 
-// ===== leitura do config.txt (CHAVE=valor) =====
 bool Controlador::carregarConfig(const std::string& arquivo) {
     std::ifstream in(arquivo);
     if (!in.is_open()) {
@@ -30,12 +27,10 @@ bool Controlador::carregarConfig(const std::string& arquivo) {
     configuracao.clear();
     std::string linha;
     while (std::getline(in, linha)) {
-        // ignora comentários e linhas vazias
         std::string raw = trim(linha);
         if (raw.empty()) continue;
         if (raw[0] == '#') continue;
 
-        // procura CHAVE=valor
         auto pos = raw.find('=');
         if (pos == std::string::npos) continue;
 
@@ -46,7 +41,6 @@ bool Controlador::carregarConfig(const std::string& arquivo) {
             configuracao[chave] = valor;
     }
 
-    // ===== aplica valores com defaults sensatos =====
     // TFS = tempo de funcionamento (minutos)
     int TFS = 10;
     if (auto it = configuracao.find("TFS"); it != configuracao.end()) {
@@ -93,19 +87,19 @@ bool Controlador::carregarConfig(const std::string& arquivo) {
         if (TAXA_IMG <= 0.0f) TAXA_IMG = 1.0f;
     }
 
-    // CAMINHO = caminho do arquivo de saída (default: "saida.txt" nesta versão)
+    // CAMINHO = caminho do arquivo de saída (default: "saida.txt" nessa versão)
     std::string CAMINHO = "saida.txt";
     if (auto it = configuracao.find("CAMINHO"); it != configuracao.end()) {
         CAMINHO = it->second;
     }
 
-    // FORMATO do display (texto/jpeg) — manteremos "texto" por enquanto
+    // FORMATO do display (texto/jpeg)
     std::string FORMATO = "texto";
     if (auto it = configuracao.find("FORMATO"); it != configuracao.end()) {
         FORMATO = to_lower(it->second);
     }
 
-    // ===== aplica nos componentes do Hidrometro =====
+    
     // Entrada
     h1.getEntrada().configurar(BITOLA, VAM, SENTIDO, PCT_AR);
 
@@ -115,7 +109,6 @@ bool Controlador::carregarConfig(const std::string& arquivo) {
 
     // Display
     // (por enquanto só guardamos o formato para futura evolução)
-    // Se quiser, você pode criar um setter. Aqui não é essencial.
     // h1.getDisplay().setFormato(FORMATO); // (não existe ainda; apenas informativo)
 
     std::cout << "[CONFIG] TFS=" << TFS
@@ -128,28 +121,23 @@ bool Controlador::carregarConfig(const std::string& arquivo) {
               << " | FORMATO=" << FORMATO
               << std::endl;
 
-    // Armazena TFS na config (para uso em executa)
     configuracao["TFS"] = std::to_string(TFS);
     return true;
 }
 
-// ===== executa a simulação =====
+// executa a simulação 
 void Controlador::executa() {
-    // lê TFS da configuração (minutos de simulação)
     int TFS = 10;
     if (auto it = configuracao.find("TFS"); it != configuracao.end()) {
         TFS = std::max(0, std::stoi(it->second));
     }
 
-    // Periodicidade por volume (a cada X m³ gera saída)
     float taxaImg = h1.getSaida().getTaxaImg_m3();
 
     std::cout << "[EXECUCAO] Iniciando simulação por " << TFS << " minuto(s)...\n";
 
-    // Volume salvo pela última geração de saída (para comparação)
     double ultimoVolumeGerado = 0.0;
 
-    // Gera uma saída inicial (opcional)
     h1.apresentacaoMedicao();
     ultimoVolumeGerado = h1.getMedicao().getVolumeTotal_m3();
 
@@ -157,7 +145,6 @@ void Controlador::executa() {
         // avança 1 minuto de simulação
         h1.medir(1.0f);
 
-        // verifica se atingiu o próximo marco de geração por volume
         double volumeAtual = h1.getMedicao().getVolumeTotal_m3();
         if (taxaImg > 0.0f && (volumeAtual - ultimoVolumeGerado) >= static_cast<double>(taxaImg)) {
             h1.apresentacaoMedicao();
@@ -165,7 +152,6 @@ void Controlador::executa() {
         }
     }
 
-    // Garante uma saída final ao término da simulação
     h1.apresentacaoMedicao();
 
     std::cout << "[EXECUCAO] Simulação concluída.\n";
