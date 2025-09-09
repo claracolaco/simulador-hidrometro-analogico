@@ -16,5 +16,5 @@ TAXA_IMG=1m3
 # Caminho do arquivo
 CAMINHO=saida.txt
 
-# Formato do display (nesta versão fica "texto")
+# Formato do display (nessa versão, "texto")
 FORMATO=texto
