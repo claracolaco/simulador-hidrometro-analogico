@@ -1,11 +1,9 @@
 #include "Saida.hpp"
-#include <fstream>   // para manipular arquivos
-#include <iostream>  // para mensagens no console
-
+#include <fstream>  
+#include <iostream>  
 Saida::Saida(std::string caminho, float taxa)
     : caminhoImagem(std::move(caminho)), taxaImg_m3(taxa) {}
 
-// Nesta versão inicial, gera um arquivo .txt com a leitura do hidrômetro
 void Saida::gerarJPEG(const Medicao& m, const Display& d) const {
     std::ofstream arquivo(caminhoImagem);
 
@@ -23,7 +21,6 @@ void Saida::gerarJPEG(const Medicao& m, const Display& d) const {
     std::cout << "[SAIDA] Arquivo gerado em: " << caminhoImagem << std::endl;
 }
 
-// Getters
 std::string Saida::getCaminhoImagem() const {
     return caminhoImagem;
 }
@@ -32,7 +29,6 @@ float Saida::getTaxaImg_m3() const {
     return taxaImg_m3;
 }
 
-// Setters
 void Saida::setCaminhoImagem(const std::string& caminho) {
     caminhoImagem = caminho;
 }
