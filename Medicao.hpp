@@ -5,19 +5,16 @@
 
 class Medicao {
 private:
-    double volumeTotal_m3;   // Volume total em metros cúbicos
-    int mm;                  // Subunidades (dígitos vermelhos)
-    int limiteOdometro;      // Limite máximo antes de voltar a zero
+    double volumeTotal_m3;   
+    int mm;                 
+    int limiteOdometro;  
 
 public:
-    // Construtor
     Medicao(int limite = 99999);
 
-    // Métodos principais
-    void contabilizar(double volume_m3);   // Soma volume ao total
-    std::string leituraTexto() const;      // Retorna string com leitura formatada
+    void contabilizar(double volume_m3);   
+    std::string leituraTexto() const;      
 
-    // Getters
     double getVolumeTotal_m3() const;
     int getMM() const;
 };
